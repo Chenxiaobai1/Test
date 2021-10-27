@@ -1,0 +1,59 @@
+image: "registry.cn-hangzhou.aliyuncs.com/launcher/mysql"
+imageTag: "8.0.18"
+
+mysqlRootPassword: '123456'
+
+mysqlUser: test
+mysqlPassword: test123
+
+mysqlDatabase: ""
+
+imagePullPolicy: IfNotPresent
+
+nodeSelector: {}
+
+livenessProbe:
+  initialDelaySeconds: 90
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 9
+
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 1
+  successThreshold: 1
+  failureThreshold: 3
+
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  storageClass: "-"
+  accessMode: ReadWriteOnce
+  size: 20Gi
+
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 100m
+  limits:
+    memory: 4G
+    cpu: 2
+
+configurationFiles:
+  mysql.cnf: |-
+    [mysqld]
+    pid-file=/var/run/mysqld/mysqld.pid
+    socket=/var/run/mysqld/mysqld.sock
+    datadir=/var/lib/mysql
+    secure-file-priv=NULL
+    lower_case_table_names=1
+    max_connections=500
+    skip-name-resolve
+    log_error_verbosity=2
+    sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'
+
+service:
+  type: ClusterIP
+  port: 3306
