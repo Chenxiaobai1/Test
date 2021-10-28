@@ -28,7 +28,7 @@ readinessProbe:
 
 ## Persist data to a persistent volume
 persistence:
-  enabled: true
+  enabled: false
   storageClass: "-"
   accessMode: ReadWriteOnce
   size: 20Gi
